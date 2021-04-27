@@ -1,0 +1,38 @@
+#CI Terrafrom
+
+ stages:
+  - terraform-init
+  - terraform-plan
+  - terraform-apply
+
+  # To store store the .terraform in an artifact use this template
+ .terraform_init_artifact_template: &store_init
+  artifacts:
+    when: on_success
+    name: "${CI_PIPELINE_ID}-${CI_JOB_NAME}"
+    untracked: true
+    paths:
+    - .terraform/
+    expire_in: 30 mins
+
+ terraform-init:
+  stage: terraform-init
+  tags : ["AWS","project","MyProject"]
+
+     
+
+ terraform-plan:
+  stage: terraform-plan
+  tags : ["AWS","project","MyProject"]
+
+
+ terraform-apply:
+  stage: terraform-apply
+  tags : ["AWS","project","MyProject"]
+
+  dependencies:
+    - terraform-init 
+  script:
+    - terraform apply -auto-approve 
+
+  when : manual
